@@ -44,21 +44,27 @@ export const createOrganization = asyncHandler(async (req,res) => {
     })
 })
 
-export const getMyOrganizations = asyncHandler(async (req,res) => {
-    const memberships = await Membership.find({userId:req.user._id}).populate('orgId','name slug createdAt').lean();
-
-    const org = memberships.map(m => ({
-        organization:m.orgId._id,
-        role:m.role,
-        joinedAt:m.createdAt,
-    }));
-
-    res.status(200).json({
-        success:true,
-        count:org.length,
-        data:org,
+export const getMyOrganizations = asyncHandler(async (req, res) => {
+  const memberships = await Membership.find({ userId: req.user._id })
+    .populate({
+      path: 'orgId',
+      model: Organization, // Explicitly model pass kar do taaki population 100% guarantee ho
+      select: 'name slug createdAt ownerId',
     })
-})
+    .lean();
+
+  const orgs = memberships.map((m) => ({
+    organization: m.orgId,
+    role: m.role,
+    joinedAt: m.createdAt,
+  }));
+
+  res.status(200).json({
+    success: true,
+    count: orgs.length,
+    data: orgs,
+  });
+});
 
 
 export const addMemberToOrganization = asyncHandler(async (req,res) =>{
