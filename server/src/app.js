@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser'; // Import the cookie-parser middleware
 import { errorHandler } from './middleware/errorHandler.js'
 import authRoutes from './routes/authRoutes.js';
+import orgRoutes from './routes/orgRoutes.js'
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/orgs', orgRoutes);
 
 // Fallback for unhandled routes
 app.use((req, res) => {
