@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'; // Import the cookie-parser middleware
 import { errorHandler } from './middleware/errorHandler.js'
+import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 
@@ -27,10 +28,12 @@ app.get('/health', (req, res) => {
   });
 });
 
+app.use('/api/v1/auth', authRoutes);
+
 // Fallback for unhandled routes
 app.use((req, res) => {
   res.status(404).json({
-    status: 'fail',
+    success: false,
     message: `Can't find ${req.originalUrl} on this server`,
   });
 });
