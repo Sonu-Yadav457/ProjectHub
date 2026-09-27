@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient.js';
 import { useOrg } from '../../context/OrgContext.jsx';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { TaskDetailModal } from '../../components/tasks/TaskDetailModal.jsx';
 import { 
   ArrowLeft, 
   Plus, 
@@ -33,6 +34,7 @@ export const ProjectBoard = () => {
   const [taskPriority, setTaskPriority] = useState('medium');
   const [taskDueDate, setTaskDueDate] = useState('');
   const [creatingTask, setCreatingTask] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
   // Fetch tasks
   const fetchTasks = useCallback(async () => {
@@ -236,6 +238,7 @@ export const ProjectBoard = () => {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
+                                  onClick={() => setSelectedTask(task)}
                                   className={`bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm transition-shadow select-none ${
                                     snapshot.isDragging
                                       ? 'border-indigo-500 ring-2 ring-indigo-500/30 shadow-2xl bg-slate-800'
@@ -363,6 +366,12 @@ export const ProjectBoard = () => {
             </form>
           </div>
         </div>
+      )}
+      {selectedTask && (
+        <TaskDetailModal
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+        />
       )}
     </div>
   );

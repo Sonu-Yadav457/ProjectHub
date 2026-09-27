@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { useOrg } from "../../context/OrgContext.jsx";
 import axiosClient from "../../api/axiosClient.js";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Users } from "lucide-react";
+import { MembersModal } from "../../components/org/MembersModal.jsx";
 import {
   LogOut,
   FolderKanban,
@@ -27,6 +29,7 @@ export const Overview = () => {
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
   const [newProjectDesc, setNewProjectDesc] = useState("");
+  const [showMembersModal, setShowMembersModal] = useState(false);
 
   // Jab bhi currentOrg change ho, uske projects fetch karo
   useEffect(() => {
@@ -182,13 +185,23 @@ export const Overview = () => {
                 </p>
               </div>
 
-              <button
-                onClick={() => setShowProjectModal(true)}
-                className="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2 rounded-xl flex items-center gap-2 cursor-pointer shadow-lg shadow-indigo-600/20"
-              >
-                <Plus className="w-4 h-4" />
-                <span>New Project</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowMembersModal(true)}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium px-3.5 py-2 rounded-xl flex items-center gap-2 border border-slate-700 cursor-pointer"
+                >
+                  <Users className="w-4 h-4 text-indigo-400" />
+                  <span>Team Members</span>
+                </button>
+
+                <button
+                  onClick={() => setShowProjectModal(true)}
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2 rounded-xl flex items-center gap-2 cursor-pointer shadow-lg shadow-indigo-600/20"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>New Project</span>
+                </button>
+              </div>
             </div>
 
             {loadingProjects ? (
@@ -317,6 +330,12 @@ export const Overview = () => {
           </div>
         )}
       </main>
+      {showMembersModal && currentOrg && (
+        <MembersModal
+          org={currentOrg}
+          onClose={() => setShowMembersModal(false)}
+        />
+      )}
     </div>
   );
 };

@@ -3,6 +3,8 @@ import {
   createOrganization,
   getMyOrganizations,
   addMemberToOrganization,
+  getOrgMembers,
+  removeMemberFromOrg
 } from '../controllers/orgController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import projectRoutes from './projectRoutes.js'
@@ -17,6 +19,10 @@ router.route('/')
   .post(createOrganization)
   .get(getMyOrganizations);
 
-router.post('/:orgId/members', addMemberToOrganization);
+router.route('/:orgId/members')
+  .get(getOrgMembers)
+  .post(addMemberToOrganization);
 
+router.route('/:orgId/members/:membershipId')
+  .delete(removeMemberFromOrg);
 export default router;

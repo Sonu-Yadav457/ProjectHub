@@ -66,6 +66,19 @@ export const getMyOrganizations = asyncHandler(async (req, res) => {
   });
 });
 
+export const getOrgMembers = asyncHandler(async (req, res) => {
+  const { orgId } = req.params;
+
+  const members = await Membership.find({ orgId })
+    .populate('userId', 'name email')
+    .sort({ createdAt: -1 });
+
+  res.status(200).json({
+    success: true,
+    count: members.length,
+    data: members,
+  });
+});
 
 export const addMemberToOrganization = asyncHandler(async (req,res) =>{
     const {orgId} = req.params;
@@ -118,3 +131,23 @@ export const addMemberToOrganization = asyncHandler(async (req,res) =>{
 
 
 })
+
+export const removeMemberFromOrg = asyncHandler(async (req, res) => {
+  const { membershipId } = req.params;
+
+  const membership = await Membership.findById(membershipId);
+  if (!membership) {
+    throw new ApiError(404, 'Membership record not found');
+  }
+
+  if (membership.role === 'owner') {
+    throw new ApiError(400, 'Workspace owner cannot be removed');
+  }
+
+  await membership.deleteOne();
+
+  res.status(200).json({
+    success: true,
+    message: 'Member removed from workspace',
+  });
+});

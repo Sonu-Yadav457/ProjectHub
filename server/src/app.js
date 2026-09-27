@@ -5,6 +5,7 @@ import { errorHandler } from './middleware/errorHandler.js'
 import authRoutes from './routes/authRoutes.js';
 import orgRoutes from './routes/orgRoutes.js'
 import taskRoutes from './routes/taskRoutes.js';
+import commentRoutes from './routes/commentRoutes.js';
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.get('/health', (req, res) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/orgs', orgRoutes);
 app.use('/api/v1/tasks', taskRoutes);
+app.use('/api/v1/tasks/:taskId/comments', commentRoutes);
 
 // Fallback for unhandled routes
 app.use((req, res) => {
